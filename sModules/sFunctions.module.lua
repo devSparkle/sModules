@@ -1,8 +1,5 @@
 --// Initialization
 
-local PlayerService = game:GetService("Players")
-
-local Module = {}
 
 --// Functions
 

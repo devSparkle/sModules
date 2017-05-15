@@ -1,9 +1,9 @@
 --// Initialization
 
-local Module = {}
+local PlayerService	= game:GetService("Players")
+local TeamService	= game:GetService("Teams")
 
-local PlayerService = game:GetService("Players")
-local TeamService = game:GetService("Teams")
+local Module		= {}
 
 --// Functions
 
