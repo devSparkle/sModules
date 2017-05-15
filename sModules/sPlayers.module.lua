@@ -36,7 +36,7 @@ function Module.GetPlayersWithinRadius(Position, Radius, PlayerList)
 	return PlayersFound
 end
 
-function Module.GetObjectOwner(Descendant)
+function Module.GetObjectOwner(Descendant, AcceptNPCs)
 	--/ Returns the Player and Character that the Descendant is part of
 	
 	assert(typeof(Descendant) == "Instance", "Descendant must be an Instance")
@@ -51,8 +51,8 @@ function Module.GetObjectOwner(Descendant)
 		else
 			return nil
 		end
-	until Player
-
+	until Player or AcceptNPCs and Character:FindFirstChild("Humanoid")
+	
 	return Character, Player
 end
 
