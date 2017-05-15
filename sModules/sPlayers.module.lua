@@ -56,4 +56,19 @@ function Module.GetObjectOwner(Descendant)
 	return Character, Player
 end
 
+function Module.GetFriendsInServer(RequestingPlayer)
+	local RequestingPlayerId = RequestingPlayer.UserId
+	local FriendsInServer = {}
+	
+	for PlayerIndex, Player in next, PlayerService:GetPlayers() do
+		if Player:IsFriendsWith(RequestingPlayerId) then
+			if Player.UserId ~= RequestingPlayerId then
+				table.insert(FriendsInServer, Player)
+			end
+		end
+	end
+	
+	return FriendsInServer
+end
+
 return Module
