@@ -9,14 +9,14 @@ local TeamService = game:GetService("Teams")
 
 function Module.IsTeamMate(PlayerOne, PlayerTwo)
 	--/ Returns if PlayerOne and PlayerTwo are on the same team
-
+	
 	return PlayerOne.Team == PlayerTwo.Team
 end
 
 function Module.GetPlayersWithinRadius(Position, Radius, PlayerList)
 	PlayerList = PlayerList or PlayerService:GetPlayers()
 	local PlayersFound = {}
-
+	
 	for PlayerIndex, Player in next, PlayerList do
 		if Player.Character then
 			if Player.Character:FindFirstChild("HumanoidRootPart") then
@@ -32,18 +32,18 @@ function Module.GetPlayersWithinRadius(Position, Radius, PlayerList)
 			debug.traceback()
 		end
 	end
-
+	
 	return PlayersFound
 end
 
 function Module.GetObjectOwner(Descendant)
 	--/ Returns the Player and Character that the Descendant is part of
-
+	
 	assert(typeof(Descendant) == "Instance", "Descendant must be an Instance")
-
+	
 	local Character = Descendant
 	local Player
-
+	
 	repeat
 		if Character.Parent then
 			Character = Character.Parent
