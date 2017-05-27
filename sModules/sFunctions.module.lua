@@ -39,8 +39,6 @@ function Module.GetIndexByValue(Values, DesiredValue)
 			return Index
 		end
 	end
-	
-	return nil
 end
 
 function Module.MergeTables(...)
@@ -64,35 +62,37 @@ function Module.MergeTables(...)
 end
 
 function Module.GetDescendants(ObjectInstance)
-	--/ Returns descendants of an Instances
-	
+    --/ Returns descendants of an Instances
+
+	assert(typeof(ObjectInstance) == "Instance", "ObjectInstance is not an Instance")
 	local Descendants = ObjectInstance:GetChildren()
+	local NumDescendants = #Descendants
 	local Count = 0
-	
+
 	repeat
 		Count = Count + 1
-		Descendants = Module.MergeTables(
-			Descendants,
-			Descendants[Count]:GetChildren()
-		)
-	until Count == #Descendants
-	
+		local GrandChildren = Descendants[Count]:GetChildren()
+		local NumGrandChildren = #GrandChildren
+		for a = 1, NumGrandChildren do
+			Descendants[NumDescendants + a] = GrandChildren[a]
+		end
+		NumDescendants = NumDescendants + NumGrandChildren
+	until Count == NumDescendants
+
 	return Descendants
 end
 
-function Module.CallOnChildren(ParentInstance, FunctionToCall, Recursive)
-	--/ Runs a function on all children of an Instance
-	--/ If Recursive is true, will run on all descendants
-	
-	assert(typeof(ParentInstance) == "Instance", "ParentInstance is not an Instance")
-	assert(type(FunctionToCall) == "function", "FunctionToCall is not a function")
-	
-	if #ParentInstance:GetChildren() == 0 then return end
-	
-	local Children = Recursive and Module.GetDescendants(ParentInstance) or ParentInstance:GetChildren()
-	
-	for _, Child in next, Children do
-		FunctionToCall(Child)
+for CallOnObjects, GetObjects in next, {CallOnChildren = game.GetChildren, CallOnDescendants = Module.GetDescendants} do
+	Module[CallOnObjects] = function(ParentInstance, FunctionToCall)
+		--/ Runs a function on all children and/or descendants of an Instance
+
+		assert(typeof(ParentInstance) == "Instance", "ParentInstance is not an Instance")
+		assert(type(FunctionToCall) == "function", "FunctionToCall is not a function")
+
+		local Objects = GetObjects(ParentInstance)
+		for a = 1, #Objects do
+			FunctionToCall(Objects[a])
+		end
 	end
 end
 
