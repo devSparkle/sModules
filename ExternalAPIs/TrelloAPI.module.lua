@@ -19,21 +19,18 @@ Module.DebugMode	= true
 --// Functions
 
 local function EncodeQueryString(URL, Query)
-	assert(Query == nil or type(Query) == "table", "Query must be a table of URL Parameters")
+	if not Query or type(Query) ~= "table" then
+		error("Query must be a table of URL Parameters")
+	end
+		
+	local QueryName, QueryValue = next(Query)
+	URL = URL .. "?" .. QueryName .. "=" .. QueryValue
 
-	local IsFirstValue	= true
-	local EncodedURL	= URL
-
-	for QueryName, QueryValue in next, Query do
-		if IsFirstValue then
-			IsFirstValue	= false
-			EncodedURL		= EncodedURL .. "?" .. QueryName .. "=" .. QueryValue
-		else
-			EncodedURL		= EncodedURL .. "&" .. QueryName .. "=" .. QueryValue
-		end
+	for QueryName, QueryValue in next, Query, QueryName do
+		URL = URL .. "&" .. QueryName .. "=" .. QueryValue
 	end
 
-	return EncodedURL
+	return URL
 end
 
 setmetatable(Boards, {
