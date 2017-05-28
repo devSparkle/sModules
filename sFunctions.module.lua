@@ -131,4 +131,23 @@ function Module.Retrieve(InstanceName, InstanceClass, InstanceParent)
 	return SearchInstance, InstanceCreated
 end
 
+function Module.IteratePages(Pages)
+	return coroutine.wrap(function()
+		local PageNumber = 1
+
+		while true do
+			for _, Item in ipairs(Pages:GetCurrentPage()) do
+				coroutine.yield(Item.Key, Item.Value)
+			end
+
+			if Pages.IsFinished then
+				break
+			end
+
+			Pages:AdvanceToNextPageAsync()
+			PageNumber = PageNumber + 1
+		end
+	end)
+end
+
 return Module
