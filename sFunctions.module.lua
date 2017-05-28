@@ -137,7 +137,7 @@ function Module.IteratePages(Pages)
 
 		while true do
 			for _, Item in ipairs(Pages:GetCurrentPage()) do
-				coroutine.yield(Item.Key, Item.Value)
+				coroutine.yield(Item.key, Item.value)
 			end
 
 			if Pages.IsFinished then
