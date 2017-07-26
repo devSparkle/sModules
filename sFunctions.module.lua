@@ -76,6 +76,16 @@ function Module.CallOnChildren(ParentInstance, FunctionToCall, Recursive)
 	end
 end
 
+function Module.CallOnValues(Table, FunctionToCall)
+	--/ Run a function on all values of a table or dictionary
+	
+	if #Table == 0 then return end
+	
+	for _, Value in next, Table do
+		FunctionToCall(Value)
+	end
+end
+
 function Module.Modify(ObjectInstance, Values)
 	--/ Modifies an Instance using a table of properties and values
 	
