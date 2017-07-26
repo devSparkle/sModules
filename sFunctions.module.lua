@@ -43,26 +43,6 @@ function Module.GetIndexByValue(Values, DesiredValue)
 	return nil
 end
 
-function Module.MergeTables(...)
-	--/ Merges tables and dictionaries
-	
-	local MergedTable = {}
-	
-	for ArgumentIndex, Argument in ipairs({...}) do
-		assert(type(Argument) == "table", "Argument " .. ArgumentIndex .. " is not a table")
-		
-		for Index, Value in ipairs(Argument) do
-			if type(Index) == "number" then
-				table.insert(MergedTable, Value)
-			else
-				table.insert(MergedTable, Index, Value)
-			end
-		end
-	end
-	
-	return MergedTable
-end
-
 function Module.GetDescendants(ObjectInstance)
 	--/ Returns descendants of an Instances
 	
