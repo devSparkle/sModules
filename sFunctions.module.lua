@@ -106,12 +106,9 @@ end
 function Module.Retrieve(InstanceName, InstanceClass, InstanceParent)
 	--/ Finds an Instance by name and creates a new one if it doesen't exist
 	
-	local SearchInstance = nil
-	local InstanceCreated = false
+	local SearchInstance, InstanceCreated = InstanceParent:FindFirstChild(InstanceName)
 	
-	if InstanceParent:FindFirstChild(InstanceName) then
-		SearchInstance = InstanceParent[InstanceName]
-	else
+	if not SearchInstance then
 		InstanceCreated = true
 		SearchInstance = Instance.new(InstanceClass)
 		SearchInstance.Name = InstanceName
@@ -123,20 +120,15 @@ end
 
 function Module.IteratePages(Pages)
 	return coroutine.wrap(function()
-		local PageNumber = 1
+		local PageNumber = 0
 
-		while true do
-			for _, Item in ipairs(Pages:GetCurrentPage()) do
-				coroutine.yield(PageNumber, Item)
-			end
-
-			if Pages.IsFinished then
-				break
-			end
-
-			Pages:AdvanceToNextPageAsync()
+		repeat
 			PageNumber = PageNumber + 1
-		end
+			local Page = Pages:GetCurrentPage()
+			for a = 1, #Page do
+				coroutine.yield(PageNumber, Page[a])
+			end
+		until Pages.IsFinished or Pages:AdvanceToNextPageAsync()
 	end)
 end
 
