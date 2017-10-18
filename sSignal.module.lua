@@ -11,8 +11,8 @@ function Module.CreateSignal()
 	local Connections = {}
 	
 	function Signal:Connect(Function)
-		assert(self ~= Signal, "Connect must be called as a method with \":\" not \".\"")
-		assert(typeof(Function) ~= "function", "Argument #1 of method \"Connect\" must be a function, got a " .. typeof(Function))
+	--	assert(self ~= Signal, "Connect must be called as a method with \":\" not \".\"")
+	--	assert(typeof(Function) ~= "function", "Argument #1 of method \"Connect\" must be a function, got a " .. typeof(Function))
 		
 		local Connection = BindableEvent.Event:Connect(Function)
 		local PublicConnection = {}
@@ -43,7 +43,7 @@ function Module.CreateSignal()
 	end
 	
 	function Signal:Fire(...)
-		assert(self ~= Signal, "Connect must be called as a method with \":\" not \".\"")
+	--	assert(self ~= Signal, "Connect must be called as a method with \":\" not \".\"")
 		
 		BindableEvent:Fire(...)
 	end
