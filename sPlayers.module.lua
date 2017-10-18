@@ -56,6 +56,12 @@ function Module.GetObjectOwner(Descendant, AcceptNPCs)
 	return Character, Player
 end
 
+function Module.GetObjectOwnerPlayer(Descendant)
+	local Character, Player = Module.GetObjectOwner(Descendant, false)
+	
+	return Player
+end
+
 function Module.GetFriendsInServer(RequestingPlayer)
 	local RequestingPlayerId = RequestingPlayer.UserId
 	local FriendsInServer = {}
@@ -69,6 +75,16 @@ function Module.GetFriendsInServer(RequestingPlayer)
 	end
 	
 	return FriendsInServer
+end
+
+function Module.BindToPlayers(Function)
+	PlayerService.PlayerAdded:Connect(Function)
+	
+	for _, Player in next, PlayerService:GetPlayers() do
+		spawn(function()
+			Function(Player)
+		end)
+	end
 end
 
 return Module
