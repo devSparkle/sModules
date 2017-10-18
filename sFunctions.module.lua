@@ -106,9 +106,12 @@ end
 function Module.Retrieve(InstanceName, InstanceClass, InstanceParent)
 	--/ Finds an Instance by name and creates a new one if it doesen't exist
 	
-	local SearchInstance, InstanceCreated = InstanceParent:FindFirstChild(InstanceName)
+	local SearchInstance = nil
+	local InstanceCreated = false
 	
-	if not SearchInstance then
+	if InstanceParent:FindFirstChild(InstanceName) then
+		SearchInstance = InstanceParent[InstanceName]
+	else
 		InstanceCreated = true
 		SearchInstance = Instance.new(InstanceClass)
 		SearchInstance.Name = InstanceName
@@ -120,16 +123,43 @@ end
 
 function Module.IteratePages(Pages)
 	return coroutine.wrap(function()
-		local PageNumber = 0
+		local PageNumber = 1
 
-		repeat
-			PageNumber = PageNumber + 1
-			local Page = Pages:GetCurrentPage()
-			for a = 1, #Page do
-				coroutine.yield(PageNumber, Page[a])
+		while true do
+			for _, Item in ipairs(Pages:GetCurrentPage()) do
+				coroutine.yield(PageNumber, Item)
 			end
-		until Pages.IsFinished or Pages:AdvanceToNextPageAsync()
+
+			if Pages.IsFinished then
+				break
+			end
+
+			Pages:AdvanceToNextPageAsync()
+			PageNumber = PageNumber + 1
+		end
 	end)
+end
+
+function Module.WeldModel(PrimaryPart, Model, WeldType)
+	local WeldType = WeldType or "Weld"
+	
+	for _, Part in next, Model:GetDescendants() do
+		if Part:IsA("BasePart") then
+			if Part ~= PrimaryPart then
+				local Weld = Instance.new(WeldType)
+				
+				if Weld.C0 then
+					Weld.C0 = Part.CFrame:toObjectSpace(PrimaryPart.CFrame)
+				end
+				
+				Weld.Part0 = Part
+				Weld.Part1 = PrimaryPart
+				
+				Weld.Parent = Part
+				Part.Anchored = false
+			end
+		end
+	end
 end
 
 return Module
