@@ -148,7 +148,7 @@ function Module.WeldModel(PrimaryPart, Model, WeldType)
 			if Part ~= PrimaryPart then
 				local Weld = Instance.new(WeldType)
 				
-				if Weld.C0 then
+				if WeldType ~= "WeldConstraint" then
 					Weld.C0 = Part.CFrame:toObjectSpace(PrimaryPart.CFrame)
 				end
 				
