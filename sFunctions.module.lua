@@ -1,6 +1,6 @@
 --// Initialization
 
-local Module	= {}
+local Module = {}
 
 --// Functions
 
