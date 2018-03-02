@@ -12,13 +12,13 @@ function Module.RoundNumber(Number, Divider)
 end
 
 function Module.PickRandom(Values)
-	--/ Will return a random pick from a table; NOT DICTIONARY
+	--/ Returns a random pick from a table; NOT DICTIONARY
 	
 	return Values[math.random(1, #Values)]
 end
 
 function Module.GenerateString(Length)
-	--/ Will return a random string of the required length
+	--/ Returns a random string of the required length
 	
 	assert(Length ~= nil, "A string length must be specified")
 	
@@ -31,16 +31,55 @@ function Module.GenerateString(Length)
 	return GeneratedString
 end
 
-function Module.GetIndexByValue(Values, DesiredValue)
-	--/ Returns the index of a value in a table or dictionary
+function Module.SplitString(String, Delimiter)
+	--/ Returns a table of string `String` split by pattern `Delimiter`
+
+	local StringParts = {}
+	local Pattern = ("([^%s]+)"):format(Delimiter)
+
+	String:gsub(Pattern, function (Part)
+		table.insert(StringParts, Part)
+	end)
+
+	return StringParts
+end;
+
+function Module.FindTableOccurrences(Haystack, Needle)
+	--/ Returns the positions of any occurrences of "Needle" in table or dictionary "Haystack"
 	
-	for Index, Value in next, Values do
-		if Value == DesiredValue then
+	local Positions = {}
+	
+	for Index, Value in next, Haystack do
+		if Value == Needle then
+			table.insert(Positions, Index)
+		end
+	end
+	
+	return Positions
+end
+
+function Module.FindTableOccurrence(Haystack, Needle)
+	--/ Returns the position of the first occurrence of "Needle" in table or dictionary "Haystack"
+	
+	for Index, Value in next, Haystack do
+		if Value == Needle then
 			return Index
 		end
 	end
 	
 	return nil
+end
+
+function Module.IsInTable(Haystack, Needle)
+	--/ Returns whether the given "Needle" is in table or dictionary "Haystack"
+	
+	for Index, Value in next, Haystack do
+		if Value == Needle then
+			return true
+		end
+	end
+	
+	return false
 end
 
 function Module.GetDescendants(ObjectInstance)
@@ -141,9 +180,10 @@ function Module.IteratePages(Pages)
 end
 
 function Module.WeldModel(PrimaryPart, Model, WeldType)
+	local Targets = typeof(Model) == "Instance" and Model:GetDescendants() or Model
 	local WeldType = WeldType or "Weld"
 	
-	for _, Part in next, Model:GetDescendants() do
+	for _, Part in next, Targets do
 		if Part:IsA("BasePart") then
 			if Part ~= PrimaryPart then
 				local Weld = Instance.new(WeldType)
