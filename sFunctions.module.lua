@@ -169,7 +169,7 @@ function Module.Modify(ObjectInstance, Values)
 	return ObjectInstance
 end
 
-function Module.Retrieve(InstanceName, InstanceClass, InstanceParent)
+function Module.Retrieve(InstanceName, InstanceClass, InstanceParent, Yield)
 	--/ Finds an Instance by name and creates a new one if it doesen't exist
 	
 	local SearchInstance = nil
@@ -177,6 +177,8 @@ function Module.Retrieve(InstanceName, InstanceClass, InstanceParent)
 	
 	if InstanceParent:FindFirstChild(InstanceName) then
 		SearchInstance = InstanceParent[InstanceName]
+	elseif Yield then
+		return InstanceParent:WaitForChild(InstanceName), InstanceCreated
 	else
 		InstanceCreated = true
 		SearchInstance = Instance.new(InstanceClass)
@@ -216,11 +218,11 @@ function Module.WeldModel(PrimaryPart, Model, WeldType)
 				local Weld = Instance.new(WeldType)
 				
 				if WeldType ~= "WeldConstraint" then
-					Weld.C0 = Part.CFrame:toObjectSpace(PrimaryPart.CFrame)
+					Weld.C0 = PrimaryPart.CFrame:toObjectSpace(Part.CFrame)
 				end
 				
-				Weld.Part0 = Part
-				Weld.Part1 = PrimaryPart
+				Weld.Part0 = PrimaryPart
+				Weld.Part1 = Part
 				
 				Weld.Parent = Part
 				Part.Anchored = false
