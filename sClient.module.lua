@@ -3,16 +3,14 @@
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Resources = require(ReplicatedStorage:WaitForChild("Resources"))
-local GetRemoteEvent = Resources.GetRemoteEvent
-local GetRemoteFunction = Resources.GetRemoteFunction
+local Overture = require(ReplicatedStorage:WaitForChild("Overture"))
 
 local Module = {}
 
 --// Functions
 
 function Module.WrapInRemoteEvent(Name, Function)
-	local RemoteEvent = GetRemoteEvent(Name)
+	local RemoteEvent = Overture:GetRemoteEvent(Name)
 	
 	if RunService:IsServer() then
 		RemoteEvent.OnServerEvent:Connect(Function)
@@ -28,7 +26,7 @@ function Module.WrapInRemoteEvent(Name, Function)
 end
 
 function Module.WrapInRemoteFunction(Name, Function)
-	local RemoteFunction = GetRemoteFunction(Name)
+	local RemoteFunction = Overture:GetRemoteFunction(Name)
 	
 	if RunService:IsServer() then
 		RemoteFunction.OnServerInvoke = Function
