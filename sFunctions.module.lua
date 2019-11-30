@@ -231,4 +231,18 @@ function Module.WeldModel(PrimaryPart, Model, WeldType)
 	end
 end
 
+function Module.WeldAttachments(Attachment1, Attachment2)
+	local Weld = Instance.new("Motor6D")
+	
+	Weld.Part0 = Attachment1.Parent
+	Weld.Part1 = Attachment2.Parent
+	
+	Weld.C0 = Attachment1.CFrame
+	Weld.C1 = Attachment2.CFrame
+	
+	Weld.Parent = Attachment1.Parent
+	
+	return Weld
+end
+
 return Module
