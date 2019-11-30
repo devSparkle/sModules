@@ -1,5 +1,7 @@
 --// Initialization
 
+local RandomObject = Random.new()
+
 local Module = {}
 
 --// Functions
@@ -11,10 +13,10 @@ function Module.RoundNumber(Number, Divider)
 	return math.floor(Number / Divider + 0.5) * Divider
 end
 
-function Module.PickRandom(Values)
+function Module.PickRandom(Haystack)
 	--/ Returns a random pick from a table; NOT DICTIONARY
 	
-	return Values[math.random(1, #Values)]
+	return Haystack[RandomObject:NextInteger(1, #Haystack)]
 end
 
 function Module.GenerateString(Length)
