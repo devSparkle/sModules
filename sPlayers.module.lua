@@ -87,4 +87,12 @@ function Module.BindToPlayers(Function)
 	end
 end
 
+function Module.BindToPlayerCharacter(Player, Function)
+	Player.CharacterAdded:Connect(Function)
+	
+	if Player.Character ~= nil then
+		Function(Player.Character)
+	end
+end
+
 return Module
