@@ -117,6 +117,31 @@ function Module.CallOnChildren(ParentInstance, FunctionToCall, Recursive)
 	end
 end
 
+function Module.BindToChildren(ParentInstance, FunctionToCall, Recursive)
+	--/ Runs a function on all existing and future children of an Instance
+	--/ If Recursive is true, will run on all descendants
+	
+	assert(typeof(ParentInstance) == "Instance", "ParentInstance is not an Instance")
+	assert(type(FunctionToCall) == "function", "FunctionToCall is not a function")
+	local Connection
+	
+	if Recursive then
+		Connection = ParentInstance.DescendantAdded:Connect(FunctionToCall)
+		
+		for _, Child in next, ParentInstance:GetDescendants() do
+			coroutine.resume(coroutine.create(FunctionToCall), Child)
+		end
+	else
+		Connection = ParentInstance.ChildAdded:Connect(FunctionToCall)
+		
+		for _, Child in next, ParentInstance:GetChildren() do
+			coroutine.resume(coroutine.create(FunctionToCall), Child)
+		end
+	end
+	
+	return Connection
+end
+
 function Module.CallOnValues(Table, FunctionToCall)
 	--/ Run a function on all values of a table or dictionary
 	
