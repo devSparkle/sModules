@@ -95,4 +95,14 @@ function Module.BindToPlayerCharacter(Player, Function)
 	end
 end
 
+function Module.BindToCharacters(Function)
+	Module.BindToPlayers(function(Player)
+		Player.CharacterAdded:Connect(Function)
+		
+		if Player.Character then
+			Function(Player.Character)
+		end
+	end)
+end
+
 return Module
