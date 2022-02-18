@@ -7,11 +7,9 @@ local Module = {}
 --// Functions
 
 function Module.BindToTag(Tag, Callback)
-	spawn(function()
+	task.spawn(function()
 		for _, TaggedItem in next, CollectionService:GetTagged(Tag) do
-			spawn(function()
-				Callback(TaggedItem)
-			end)
+			task.spawn(Callback, TaggedItem)
 		end
 	end)
 	
