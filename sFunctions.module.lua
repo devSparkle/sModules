@@ -67,7 +67,7 @@ end
 function Module.FindTableOccurrence(Haystack, Needle)
 	--/ Returns the position of the first occurrence of "Needle" in table or dictionary "Haystack"
 	
-	for Index, Value in next, Haystack do
+	for Index, Value in ipairs(Haystack) do
 		if Value == Needle then
 			return Index
 		end
