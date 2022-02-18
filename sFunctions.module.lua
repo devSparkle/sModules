@@ -105,6 +105,31 @@ function Module.GetDescendants(ObjectInstance)
 	return Descendants
 end
 
+function Module.WaitForDescendant(ParentInstance, Name)
+	assert(typeof(ParentInstance) == "Instance", "ParentInstance is not an Instance")
+	assert(type(Name) == "string", "Name is not a string")
+	
+	local Descendant
+	
+	repeat
+		Descendant = ParentInstance:FindFirstChild(Name, true)
+			or ParentInstance.DescendantAdded:Wait()
+	until Descendant and Descendant.Name == Name
+	
+	return Descendant
+end
+
+function Module.WaitForChild(ParentInstance, Name, Recursive)
+	assert(typeof(ParentInstance) == "Instance", "ParentInstance is not an Instance")
+	assert(type(Name) == "string", "Name is not a string")
+	
+	if not Recursive then
+		return ParentInstance:WaitForChild(Name)
+	else
+		return Module.WaitForDescendant(ParentInstance, Name)
+	end
+end
+
 function Module.CallOnChildren(ParentInstance, FunctionToCall, Recursive)
 	--/ Runs a function on all children of an Instance
 	--/ If Recursive is true, will run on all descendants
