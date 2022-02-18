@@ -35,6 +35,10 @@ end
 
 function Module.SplitString(String, Delimiter)
 	--/ Returns a table of string `String` split by pattern `Delimiter`
+	
+	if string.split then
+		return string.split(String, Delimiter)
+	end
 
 	local StringParts = {}
 	local Pattern = ("([^%s]+)"):format(Delimiter)
