@@ -1,7 +1,5 @@
 --// Initialization
 
-local HttpService = game:GetService("HttpService")
-
 local Signal = {}
 Signal.__index = Signal
 
@@ -42,9 +40,7 @@ function Signal:Connect(Function)
 	
 	if self.StoreFireNew then
 		for _, Arguments in next, self.FireStore do
-			spawn(function()
-				Function(unpack(Arguments))
-			end)
+			task.spawn(Function, unpack(Arguments))
 		end
 	end
 	
@@ -52,18 +48,9 @@ function Signal:Connect(Function)
 end
 
 function Signal:Wait()
-	local BindableEvent = Instance.new("BindableEvent")
-	table.insert(self.YieldedThreads, BindableEvent)
-	
-	local GUID = BindableEvent.Event:Wait()
-	
-	return unpack(self[GUID])
-	
-	--[[ Disabled, Jira:CORE-4
 	table.insert(self.YieldedThreads, (coroutine.running()))
 	
 	return coroutine.yield()
-	--]]
 end
 
 function Signal:Fire(...)
@@ -71,22 +58,10 @@ function Signal:Fire(...)
 		table.insert(self.FireStore, {...})
 	end
 	
-	local GUID = HttpService:GenerateGUID()
-	self[GUID] = {...}
-	
 	for ThreadId = #self.YieldedThreads, 1, -1 do
-		self.YieldedThreads[ThreadId]:Fire(GUID)
+		task.spawn(self.YieldedThreads[ThreadId], ...)
 		table.remove(self.YieldedThreads, ThreadId)
-		
-		--[[ Disabled, Jira:CORE-4
-		coroutine.resume(self.YieldedThreads[ThreadId], ...)
-		table.remove(self.YieldedThreads, ThreadId)
-		--]]
 	end
-	
-	delay(1, function()
-		self[GUID] = nil
-	end)
 	
 	for _, BoundConnection in next, self.Connections do
 		local Success, Error = pcall(Connection.Fire, BoundConnection, ...)
