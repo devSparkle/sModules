@@ -242,7 +242,11 @@ function Module.WeldModel(PrimaryPart, Model, WeldType)
 	local WeldType = WeldType or "Weld"
 	
 	for _, Part in next, Targets do
-		if Part:IsA("BasePart") then
+		while Part:IsA("ObjectValue") do
+			Part = Part.Value
+		end
+		
+		if Part and Part:IsA("BasePart") then
 			if Part ~= PrimaryPart then
 				local Weld = Instance.new(WeldType)
 				
