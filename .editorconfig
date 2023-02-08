@@ -6,7 +6,7 @@ root = true
 # Global file settings
 
 [*]
-insert_final_newline = false
+insert_final_newline = true
 
 
 # File specific matches
